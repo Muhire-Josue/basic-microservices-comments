@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto');
 const cors = require('cors');
 const axios = require('axios');
+const { stat } = require('fs');
 
 const app = express();
 app.use(bodyParser.json());
@@ -44,6 +45,14 @@ app.post('/events', (req, res) => {
 
     if (type === 'CommentModerated') {
         const { postId, id, status } = data;
+
+        const comments = commentsByPostId[postId];
+
+        const comment = comments.find(comment => {
+            return comment.id === id;
+        });
+
+        comment.status = status;
     }
 
     res.send({});
